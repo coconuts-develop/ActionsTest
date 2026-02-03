@@ -1,0 +1,36 @@
+name: Create back merge from main to dev
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create-back-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate GitHub App token
+        id: generate_token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.CREATE_APP_TOKEN_APP_ID }}
+          private-key: ${{ secrets.CREATE_APP_TOKEN_PRIVATE_KEY }}
+
+      - name: Check out
+        uses: actions/checkout@v5
+
+      - name: Create back merge branch
+        run: |
+          git checkout -b back-merge
+          git push origin back-merge
+
+      - name: Create back merge PR
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+          title: "Back merge to dev"
+          body: "This pull request was generated automatically by GitHub Actions."
+        run: |
+          gh pr create \
+          --base "dev" \
+          --title "${{ env.title }}" \
+          --body "${{ env.body }}"

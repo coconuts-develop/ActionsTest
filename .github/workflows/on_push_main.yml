@@ -29,15 +29,14 @@ jobs:
       - name: Create back merge PR
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+          PR_TITLE: "Back merge from main to dev"
+          PR_BODY: |
+            # This pull request was generated automatically by GitHub Actions.
+
+            * Test message
+            * **Another test message**
         run: |
-          pr_title=`Back merge from main to dev`
-          pr_body=`# This pull request was generated automatically by GitHub Actions.
-
-          * Test message
-          * **Another test message**
-          `
-
           gh pr create \
-          --base "dev" \
-          --title "${pr_title}" \
-          --body "${pr_body}"
+            --base "dev" \
+            --title "$PR_TITLE" \
+            --body "$PR_BODY"

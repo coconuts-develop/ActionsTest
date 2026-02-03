@@ -20,6 +20,8 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Create back merge branch
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
           git checkout -b back-merge
           git push origin back-merge
